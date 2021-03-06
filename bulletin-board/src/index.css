@@ -23,6 +23,8 @@ code {
   color: rgb(54, 54, 54);
 }
 
-#intro-message {
-  
+.icon {
+  width: 25px !important;
+  height: 30px !important;
+  padding-right: 0px !important;
 }

@@ -5,6 +5,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../src/components/Navigation/style.css';
 import logo from '../src/components/Navigation/logo.png';
 import compose from '../src/components/Navigation/compose.png';
+import star from './star.png';
+import profile from './profile.png';
+import styled from 'styled-components';
 import {
   Navbar,
   Form,
@@ -22,16 +25,16 @@ const App = () => {
   const [url, setUrl] = React.useState(`${API_ENDPOINT}${searchTerm}`);
 
   const handleFetchArticles = React.useCallback(async () => {
-    dispatchArticles({ type: 'ARTICLES_FETCH_INIT'});
-    
+    dispatchArticles({ type: 'ARTICLES_FETCH_INIT' });
+
     try {
       const result = await axios.get(url);
       dispatchArticles({
         type: 'ARTICLES_FETCH_SUCCESS',
-        payload: result.data.hits, 
+        payload: result.data.hits,
       });
     } catch {
-      dispatchArticles({ type: 'ARTICLES_FETCH_FAILURE'});
+      dispatchArticles({ type: 'ARTICLES_FETCH_FAILURE' });
     }
   }, [url]);
 
@@ -53,43 +56,43 @@ const App = () => {
     handleFetchArticles();
   }, [handleFetchArticles]);
 
-  return(
+  return (
     <div>
       <Navbar bg="white" sticky='top' className='nav-bar'>
-            <a href="/#"><img src={logo} alt="logo" /></a>
-            <Navbar.Brand href="#">Bulletin</Navbar.Brand>
-            <Navbar.Toggle />
-            <SearchForm
-              searchTerm = {searchTerm}
-              onSearchInput = {handleSearchInput}
-              onSearchSubmit = {handleSearchSubmit}
-            />
-            {/* <Form inline className="center" >
+        <a href="/#"><img src={logo} alt="logo" /></a>
+        <Navbar.Brand href="#">Bulletin</Navbar.Brand>
+        <Navbar.Toggle />
+        <SearchForm
+          searchTerm={searchTerm}
+          onSearchInput={handleSearchInput}
+          onSearchSubmit={handleSearchSubmit}
+        />
+        {/* <Form inline className="center" >
                 <FormControl type="text" placeholder="Search" />
                 <Button variant="outline-primary">Search</Button>
             </Form > */}
-            <Navbar.Collapse className="justify-content-end">
-                <a href="#compose"><img src={compose} alt="compose"/></a>
-                <Navbar.Text>
-                    Signed in as: <a href="#login">Uriyah Ann</a>
-                </Navbar.Text>
-            </Navbar.Collapse>
-        </Navbar>
+        <Navbar.Collapse className="justify-content-end">
+          <a href="#compose"><img src={compose} alt="compose" /></a>
+          <Navbar.Text>
+            Signed in as: <a href="#login">Uriyah Ann</a>
+          </Navbar.Text>
+        </Navbar.Collapse>
+      </Navbar>
 
 
       <div className="intro">
         <h1 id="intro-header">Welcome to Bulletin</h1>
         <p id="intro-message">Our application allows you to read, create, edit and delete articles. Create an account to begin editing!</p>
       </div>
-      
+
       {articles.isError && <p> Something went wrong...</p>}
-      
+
       {articles.isLoading ? (
         <p>Loading...</p>
-      ): (
-        <List list={articles.data}/>
+      ) : (
+        <List list={articles.data} />
       )}
-      
+
     </div>
   );
 };
@@ -145,49 +148,73 @@ interface ArticlesRemoveAction {
   payload: Article;
 };
 
-type ArticlesAction = 
+type ArticlesAction =
   | ArticlesFetchInitAction
   | ArticlesFetchSuccessAction
   | ArticlesFetchFailureAction
   | ArticlesRemoveAction;
 
+
+const StyledColumn = styled.span<{ width: string }>`
+  padding: 0 5px;
+  white-span: nowrap;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  a {
+    color: inherit;
+  }
+
+  width: ${props => props.width};
+`;
+
+
 // COMPONENTS
-const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit}: SearchFormProps) => {
+const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit }: SearchFormProps) => {
   return (
     <Form inline onSubmit={onSearchSubmit} className="center">
-      <FormControl type="text" placeholder="Search" onChange={onSearchInput}/>
+      <FormControl type="text" placeholder="Search" onChange={onSearchInput} />
       <Button variant="outline-primary">Search</Button>
     </Form>
   );
-  
+
 };
 
-const List = ({ list}: ListProps) => (
+const List = ({ list }: ListProps) => (
   <>
-  <ListGroup variant="flush">
-    {list.map(item => (
-      <Item 
-        key={item.objectID}
-        item={item}
-      />
-    ))}
+    <ListGroup variant="flush">
+      {list.map(item => (
+        <Item
+          key={item.objectID}
+          item={item}
+        />
+      ))}
     </ListGroup>
   </>
 );
 
-const Item = ({item}: ItemProps) => (
-  <ListGroup.Item variant="flush" className="listgroup-item" > 
-    <p> <a href={item.url}> {item.title}</a></p>
-    <p>{item.author}</p>
-    <p>{item.num_comments}</p>
-    <p>{item.points}</p>
+const Item = ({ item }: ItemProps) => (
+  <ListGroup.Item variant="flush" className="listgroup-item">
+    <StyledColumn width="40%" className="col">
+      <p> <a href={item.url}> {item.title}</a></p>
+    </StyledColumn>
+    
+    <StyledColumn width="30%" className="col">
+      <img src={profile} alt="profile" className="icon" /><p>{item.author}</p>
+    </StyledColumn>
+
+    <StyledColumn width="20%" className="col">
+      <img src={star} alt="like" className="icon" /><p>{item.points}</p>
+    </StyledColumn>
+    
   </ListGroup.Item>
 );
 // UTILITIES
 
 const useSemiPersistentState = (
-  key: string, 
-  initialState: string) : [string, (newValue: string) => void ] => {
+  key: string,
+  initialState: string): [string, (newValue: string) => void] => {
   /** useSemiPersistantState: custom hook
    *  - pass in a key in order to fix overwrite of the 'value' allocated in local storage
    *    when custom hook is used more than once

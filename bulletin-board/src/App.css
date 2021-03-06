@@ -44,10 +44,10 @@
 
 .listgroup-item {
   width: 50%;
-  text-align: left;
+  text-align: center;
 }
 
-.listgroup-item > p{
+.listgroup-item > .col {
   display: inline-block;
   margin: 5px;
 }
