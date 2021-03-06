@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+.intro {
+  padding: 60px;
+  width: 100%;
+  text-align: center;
+}
+
+#intro-header {
+  color: rgb(54, 54, 54);
+}
+
+#intro-message {
+  
+}

@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+.list-group {
+  position:relative;
+  left: 30%;
+  width: 80%;
+}
+
+.listgroup-item {
+  width: 50%;
+  text-align: left;
+}
+
+.listgroup-item > p{
+  display: inline-block;
+  margin: 5px;
+}
