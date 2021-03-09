@@ -14,8 +14,12 @@ import {
   FormControl,
   Button,
   ListGroup,
+  Modal,
+  ModalTitle
 } from 'react-bootstrap';
+import ModalHeader from 'react-bootstrap/esm/ModalHeader';
 const App = () => {
+
   const [searchTerm] = useSemiPersistentState('search', 'other');
   const [articles, dispatchArticles] = React.useReducer(articlesReducer, {
     data: [],
@@ -23,6 +27,7 @@ const App = () => {
     isError: false,
   })
   const [url, setUrl] = React.useState(`${API_ENDPOINT}${searchTerm}`);
+
 
   const handleFetchArticles = React.useCallback(async () => {
     dispatchArticles({ type: 'ARTICLES_FETCH_INIT' });
@@ -111,6 +116,8 @@ type ListProps = {
 
 type ItemProps = {
   item: Article;
+  // showModal: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  // hideModal: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 type Article = {
@@ -194,22 +201,50 @@ const List = ({ list }: ListProps) => (
   </>
 );
 
-const Item = ({ item }: ItemProps) => (
-  <ListGroup.Item variant="flush" className="listgroup-item">
-    <StyledColumn width="40%" className="col">
-      <p> <a href={item.url}> {item.title}</a></p>
-    </StyledColumn>
-    
-    <StyledColumn width="30%" className="col">
-      <img src={profile} alt="profile" className="icon" /><p>{item.author}</p>
-    </StyledColumn>
+const Item = ({ item }: ItemProps) => {
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const showModal = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setModalOpen(true);
+  }
 
-    <StyledColumn width="20%" className="col">
-      <img src={star} alt="like" className="icon" /><p>{item.points}</p>
-    </StyledColumn>
-    
-  </ListGroup.Item>
-);
+  const hideModal = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setModalOpen(false);
+  }
+  return (
+    <>
+      <ListGroup.Item variant="flush" className="listgroup-item">
+        <StyledColumn width="40%" className="col">
+          <button onClick={showModal} >{item.title}</button>
+            <Modal 
+              show={modalOpen} 
+              onHide={hideModal}
+              size="lg"
+              centered
+              aria-labelledby="contained-modal-title-vcenter">
+                <ModalHeader closeButton>
+                  <ModalTitle id="contained-modal-title-vcenter" > {item.title} </ModalTitle>
+                </ModalHeader>
+            </Modal>
+          {/* <p> <a href={item.url}> {item.title}</a></p> */}
+        </StyledColumn>
+
+        <StyledColumn width="30%" className="col">
+          <img src={profile} alt="profile" className="icon" /><p>{item.author}</p>
+        </StyledColumn>
+
+        <StyledColumn width="20%" className="col">
+          <img src={star} alt="like" className="icon" /><p>{item.points}</p>
+        </StyledColumn>
+
+      </ListGroup.Item>
+    </>
+  );
+
+};
 // UTILITIES
 
 const useSemiPersistentState = (
