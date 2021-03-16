@@ -15,19 +15,22 @@ import {
   Button,
   ListGroup,
   Modal,
-  ModalTitle
+  ModalTitle,
+  ModalBody,
+  ModalFooter
 } from 'react-bootstrap';
 import ModalHeader from 'react-bootstrap/esm/ModalHeader';
+import { VoidExpression } from 'typescript';
+
 const App = () => {
 
-  const [searchTerm] = useSemiPersistentState('search', 'other');
+  const [searchTerm, setSearchTerm] = useSemiPersistentState("search", "react");
   const [articles, dispatchArticles] = React.useReducer(articlesReducer, {
     data: [],
     isLoading: false,
     isError: false,
-  })
+  });
   const [url, setUrl] = React.useState(`${API_ENDPOINT}${searchTerm}`);
-
 
   const handleFetchArticles = React.useCallback(async () => {
     dispatchArticles({ type: 'ARTICLES_FETCH_INIT' });
@@ -46,8 +49,7 @@ const App = () => {
   const handleSearchInput = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setUrl(`${API_ENDPOINT}${searchTerm}`);
-    event.preventDefault();
+    setSearchTerm(event.target.value);
   };
 
   const handleSearchSubmit = (
@@ -120,6 +122,15 @@ type ItemProps = {
   // hideModal: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
+type InputWithLabelProps = {
+  id: string;
+  value: string;
+  type?: string;
+  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  isFocused?: boolean;
+  children: React.ReactNode;
+};
+
 type Article = {
   objectID: string;
   url: string;
@@ -176,17 +187,47 @@ const StyledColumn = styled.span<{ width: string }>`
   width: ${props => props.width};
 `;
 
+const StyledInput = styled.input`
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+`;
+
+const StyledLabel = styled.label`
+  border: none;
+  background-color: transparent;
+  font-size: 16px;
+`;
+
+const StyledSearchForm = styled.form`
+  padding: 10px 0 20px 0;
+  display: flex;
+  align-items: baseline;
+`;
 
 // COMPONENTS
 const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit }: SearchFormProps) => {
   return (
-    <Form inline onSubmit={onSearchSubmit} className="center">
-      <FormControl type="text" placeholder="Search" onChange={onSearchInput} />
-      <Button variant="outline-primary">Search</Button>
-    </Form>
+    <Form inline onSubmit={onSearchSubmit} className="center" >
+    <FormControl type="text" placeholder="Search" id="search" value={searchTerm} onChange={onSearchInput} />
+    <Button variant="outline-primary" type="submit">Search</Button>
+  </Form>
   );
-
+  
 };
+
+
+// <StyledSearchForm onSubmit={onSearchSubmit}>
+//   <InputWithLabel 
+//     id="search"
+//     value={searchTerm}
+//     isFocused
+//     onInputChange={onSearchInput}
+//   >
+//     SEARCH
+//   </InputWithLabel>
+//   <Button variant="outline-primary" type="submit"> Search </Button>
+// </StyledSearchForm>
 
 const List = ({ list }: ListProps) => (
   <>
@@ -219,16 +260,23 @@ const Item = ({ item }: ItemProps) => {
       <ListGroup.Item variant="flush" className="listgroup-item">
         <StyledColumn width="40%" className="col">
           <button onClick={showModal} >{item.title}</button>
-            <Modal 
-              show={modalOpen} 
-              onHide={hideModal}
-              size="lg"
-              centered
-              aria-labelledby="contained-modal-title-vcenter">
-                <ModalHeader closeButton>
-                  <ModalTitle id="contained-modal-title-vcenter" > {item.title} </ModalTitle>
-                </ModalHeader>
-            </Modal>
+          <Modal
+            show={modalOpen}
+            onHide={hideModal}
+            size="lg"
+            centered
+            aria-labelledby="contained-modal-title-vcenter">
+            <ModalHeader closeButton>
+              <ModalTitle id="contained-modal-title-vcenter" > {item.title} </ModalTitle>
+            </ModalHeader>
+            <ModalBody>
+              <h2>{ }</h2>
+              <p></p>
+            </ModalBody>
+            <ModalFooter>
+              <p>Footer</p>
+            </ModalFooter>
+          </Modal>
           {/* <p> <a href={item.url}> {item.title}</a></p> */}
         </StyledColumn>
 
@@ -273,6 +321,34 @@ const useSemiPersistentState = (
   return [value, setValue];
 };
 
+const InputWithLabel = ({
+  id,
+  value,
+  type = "text",
+  onInputChange,
+  isFocused,
+  children
+}: InputWithLabelProps) => {
+  const inputRef = React.useRef<HTMLInputElement>(null!);
+  React.useEffect(() => {
+    if (isFocused && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isFocused]);
+
+  return (
+    <>
+      <StyledLabel htmlFor={id}>{children}</StyledLabel>
+      <StyledInput
+        ref={inputRef}
+        id={id}
+        type={type}
+        value={value}
+        onChange={onInputChange}
+      />
+    </>
+  );
+};
 const articlesReducer = (state: ArticlesState, action: ArticlesAction) => {
   switch (action.type) {
     case "ARTICLES_FETCH_INIT":
