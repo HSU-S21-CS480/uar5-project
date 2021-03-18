@@ -259,7 +259,7 @@ const Item = ({ item }: ItemProps) => {
     <>
       <ListGroup.Item variant="flush" className="listgroup-item">
         <StyledColumn width="40%" className="col">
-          <button onClick={showModal} >{item.title}</button>
+          <button type="button" className="btn btn-light" onClick={showModal} ><span className="buttontext"> {item.title}</span></button>
           <Modal
             show={modalOpen}
             onHide={hideModal}
@@ -267,7 +267,7 @@ const Item = ({ item }: ItemProps) => {
             centered
             aria-labelledby="contained-modal-title-vcenter">
             <ModalHeader closeButton>
-              <ModalTitle id="contained-modal-title-vcenter" > {item.title} </ModalTitle>
+              <ModalTitle id="contained-modal-title-vcenter">{item.title}</ModalTitle>
             </ModalHeader>
             <ModalBody>
               <h2>{ }</h2>

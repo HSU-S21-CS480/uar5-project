@@ -51,3 +51,11 @@
   display: inline-block;
   margin: 5px;
 }
+
+ .buttontext {
+  width: 250px;
+  overflow: hidden;
+  white-space: nowrap;
+  display: block;
+  text-overflow: ellipsis;
+}
