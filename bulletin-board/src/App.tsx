@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -20,10 +20,15 @@ import {
   ModalFooter
 } from 'react-bootstrap';
 import ModalHeader from 'react-bootstrap/esm/ModalHeader';
-import { VoidExpression } from 'typescript';
+
+import Dashboard from './components/Dashboard/Dashboard';
+import Preferences from './components/Preferences/Preferences';
+import Login from './components/Login/Login';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+
 
 const App = () => {
-
+  
   const [searchTerm, setSearchTerm] = useSemiPersistentState("search", "react");
   const [articles, dispatchArticles] = React.useReducer(articlesReducer, {
     data: [],
@@ -81,7 +86,7 @@ const App = () => {
         <Navbar.Collapse className="justify-content-end">
           <a href="#compose"><img src={compose} alt="compose" /></a>
           <Navbar.Text>
-            Signed in as: <a href="#login">Uriyah Ann</a>
+            <a href="#login">Login</a>
           </Navbar.Text>
         </Navbar.Collapse>
       </Navbar>
@@ -100,6 +105,16 @@ const App = () => {
         <List list={articles.data} />
       )}
 
+      <BrowserRouter>
+        <Switch>
+          <Route path="/dashboard">
+            <Dashboard/>
+          </Route>
+          <Route path="/preferences">
+            <Preferences  />
+          </Route>
+        </Switch>
+      </BrowserRouter>
     </div>
   );
 };
@@ -209,11 +224,11 @@ const StyledSearchForm = styled.form`
 const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit }: SearchFormProps) => {
   return (
     <Form inline onSubmit={onSearchSubmit} className="center" >
-    <FormControl type="text" placeholder="Search" id="search" value={searchTerm} onChange={onSearchInput} />
-    <Button variant="outline-primary" type="submit">Search</Button>
-  </Form>
+      <FormControl type="text" placeholder="Search" id="search" value={searchTerm} onChange={onSearchInput} />
+      <Button variant="outline-primary" type="submit">Search</Button>
+    </Form>
   );
-  
+
 };
 
 
