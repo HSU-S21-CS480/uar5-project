@@ -21,6 +21,7 @@ import {
 } from 'react-bootstrap';
 import ModalHeader from 'react-bootstrap/esm/ModalHeader';
 
+import Home from './pages/Home/Home';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register'
@@ -87,22 +88,15 @@ const App = () => {
           </Navbar.Collapse>
         </Navbar>
 
-
-        <div className="intro">
-          <h1 id="intro-header">Welcome to Bulletin</h1>
-          <p id="intro-message">Our application allows you to read, create, edit and delete articles. Create an account to begin editing!</p>
-        </div>
-
-        {articles.isError && <p> Something went wrong...</p>}
-
-        {articles.isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          <List list={articles.data} />
-        )}
         <Switch>
           <Route path="/login">
             <Login />
+          </Route>
+          <Route path="/">
+            <Home
+              articles={articles.data}
+              isError={articles.isError}
+              isLoading={articles.isLoading} />
           </Route>
         </Switch>
       </div>
@@ -111,73 +105,6 @@ const App = () => {
 };
 
 const API_ENDPOINT = "https://hn.algolia.com/api/v1/search?query=";
-
-type SearchFormProps = {
-  searchTerm: string,
-  onSearchInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onSearchSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-};
-
-type ListProps = {
-  list: Articles;
-};
-
-type ItemProps = {
-  item: Article;
-  // showModal: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  // hideModal: (event: React.MouseEvent<HTMLButtonElement>) => void;
-};
-
-type InputWithLabelProps = {
-  id: string;
-  value: string;
-  type?: string;
-  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  isFocused?: boolean;
-  children: React.ReactNode;
-};
-
-type Article = {
-  objectID: string;
-  url: string;
-  title: string;
-  author: string;
-  num_comments: number;
-  points: number;
-}
-
-type Articles = Array<Article>;
-
-type ArticlesState = {
-  data: Articles,
-  isLoading: boolean,
-  isError: boolean,
-};
-
-interface ArticlesFetchInitAction {
-  type: 'ARTICLES_FETCH_INIT';
-};
-
-interface ArticlesFetchSuccessAction {
-  type: 'ARTICLES_FETCH_SUCCESS';
-  payload: Articles;
-};
-
-interface ArticlesFetchFailureAction {
-  type: 'ARTICLES_FETCH_FAILURE';
-};
-
-interface ArticlesRemoveAction {
-  type: 'REMOVE_ARTICLE';
-  payload: Article;
-};
-
-type ArticlesAction =
-  | ArticlesFetchInitAction
-  | ArticlesFetchSuccessAction
-  | ArticlesFetchFailureAction
-  | ArticlesRemoveAction;
-
 
 const StyledColumn = styled.span<{ width: string }>`
   padding: 0 5px;
@@ -219,8 +146,73 @@ const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit }: SearchFormPro
       <Button variant="outline-primary" type="submit">Search</Button>
     </Form>
   );
-
 };
+
+type SearchFormProps = {
+  searchTerm: string,
+  onSearchInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSearchSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+};
+
+type ListProps = {
+  list: Articles;
+};
+
+type ItemProps = {
+  item: Article;
+  // showModal: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  // hideModal: (event: React.MouseEvent<HTMLButtonElement>) => void;
+};
+
+type InputWithLabelProps = {
+  id: string;
+  value: string;
+  type?: string;
+  onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  isFocused?: boolean;
+  children: React.ReactNode;
+};
+
+export type Article = {
+  objectID: string;
+  url: string;
+  title: string;
+  author: string;
+  num_comments: number;
+  points: number;
+}
+
+type Articles = Array<Article>;
+
+type ArticlesState = {
+  data: Articles,
+  isLoading: boolean,
+  isError: boolean,
+};
+
+interface ArticlesFetchInitAction {
+  type: 'ARTICLES_FETCH_INIT';
+}
+
+interface ArticlesFetchSuccessAction {
+  type: 'ARTICLES_FETCH_SUCCESS';
+  payload: Articles;
+}
+
+interface ArticlesFetchFailureAction {
+  type: 'ARTICLES_FETCH_FAILURE';
+}
+
+interface ArticlesRemoveAction {
+  type: 'REMOVE_ARTICLE';
+  payload: Article;
+}
+
+type ArticlesAction =
+  | ArticlesFetchInitAction
+  | ArticlesFetchSuccessAction
+  | ArticlesFetchFailureAction
+  | ArticlesRemoveAction;
 
 
 // <StyledSearchForm onSubmit={onSearchSubmit}>
@@ -235,7 +227,7 @@ const SearchForm = ({ searchTerm, onSearchInput, onSearchSubmit }: SearchFormPro
 //   <Button variant="outline-primary" type="submit"> Search </Button>
 // </StyledSearchForm>
 
-const List = ({ list }: ListProps) => (
+export const List = ({ list }: ListProps) => (
   <>
     <ListGroup variant="flush">
       {list.map(item => (

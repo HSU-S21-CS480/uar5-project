@@ -1,9 +1,15 @@
-import React from 'react';
+import {
+    Article,
+    List,
+} from '../../App';
 
 type HomeProps = {
-    
+    articles: Array<Article>,
+    isError: boolean,
+    isLoading: boolean,
 };
-const Home = () => {
+
+const Home = (props: HomeProps) => {
     return (
         <div>
             <div className="intro">
@@ -11,12 +17,12 @@ const Home = () => {
                 <p id="intro-message">Our application allows you to read, create, edit and delete articles. Create an account to begin editing!</p>
             </div>
 
-            {articles.isError && <p> Something went wrong...</p>}
+            {props.isError && <p> Something went wrong...</p>}
 
-            {articles.isLoading ? (
+            {props.isLoading ? (
                 <p>Loading...</p>
             ) : (
-                <List list={articles.data} />
+                <List list={props.articles} />
             )}
         </div>
     );
