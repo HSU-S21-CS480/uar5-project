@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Login() {
+const Login = () => {
     return(
         <div>
             <h2>Login Component</h2>
@@ -22,3 +22,4 @@ export default function Login() {
         </div>
     );
 }
+export default Login;

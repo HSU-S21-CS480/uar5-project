@@ -21,14 +21,13 @@ import {
 } from 'react-bootstrap';
 import ModalHeader from 'react-bootstrap/esm/ModalHeader';
 
-import Dashboard from './components/Dashboard/Dashboard';
-import Preferences from './components/Preferences/Preferences';
-import Login from './components/Login/Login';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Dashboard from './pages/Dashboard/Dashboard';
+import Login from './pages/Login/Login';
+import Register from './pages/Register/Register'
+import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 
 
 const App = () => {
-  
   const [searchTerm, setSearchTerm] = useSemiPersistentState("search", "react");
   const [articles, dispatchArticles] = React.useReducer(articlesReducer, {
     data: [],
@@ -69,53 +68,45 @@ const App = () => {
   }, [handleFetchArticles]);
 
   return (
-    <div>
-      <Navbar bg="white" sticky='top' className='nav-bar'>
-        <a href="/#"><img src={logo} alt="logo" /></a>
-        <Navbar.Brand href="#">Bulletin</Navbar.Brand>
-        <Navbar.Toggle />
-        <SearchForm
-          searchTerm={searchTerm}
-          onSearchInput={handleSearchInput}
-          onSearchSubmit={handleSearchSubmit}
-        />
-        {/* <Form inline className="center" >
-                <FormControl type="text" placeholder="Search" />
-                <Button variant="outline-primary">Search</Button>
-            </Form > */}
-        <Navbar.Collapse className="justify-content-end">
-          <a href="#compose"><img src={compose} alt="compose" /></a>
-          <Navbar.Text>
-            <a href="#login">Login</a>
-          </Navbar.Text>
-        </Navbar.Collapse>
-      </Navbar>
+    <BrowserRouter>
+      <div>
+        <Navbar bg="white" sticky='top' className='nav-bar'>
+          <a href="/"><img src={logo} alt="logo" /></a>
+          <Navbar.Brand href="/">Bulletin</Navbar.Brand>
+          <Navbar.Toggle />
+          <SearchForm
+            searchTerm={searchTerm}
+            onSearchInput={handleSearchInput}
+            onSearchSubmit={handleSearchSubmit}
+          />
+          <Navbar.Collapse className="justify-content-end">
+            <a href="#compose"><img src={compose} alt="compose" /></a>
+            <Navbar.Text>
+              <Link to="/login">Login</Link>
+            </Navbar.Text>
+          </Navbar.Collapse>
+        </Navbar>
 
 
-      <div className="intro">
-        <h1 id="intro-header">Welcome to Bulletin</h1>
-        <p id="intro-message">Our application allows you to read, create, edit and delete articles. Create an account to begin editing!</p>
-      </div>
+        <div className="intro">
+          <h1 id="intro-header">Welcome to Bulletin</h1>
+          <p id="intro-message">Our application allows you to read, create, edit and delete articles. Create an account to begin editing!</p>
+        </div>
 
-      {articles.isError && <p> Something went wrong...</p>}
+        {articles.isError && <p> Something went wrong...</p>}
 
-      {articles.isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        <List list={articles.data} />
-      )}
-
-      <BrowserRouter>
+        {articles.isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <List list={articles.data} />
+        )}
         <Switch>
-          <Route path="/dashboard">
-            <Dashboard/>
-          </Route>
-          <Route path="/preferences">
-            <Preferences  />
+          <Route path="/login">
+            <Login />
           </Route>
         </Switch>
-      </BrowserRouter>
-    </div>
+      </div>
+    </BrowserRouter>
   );
 };
 
