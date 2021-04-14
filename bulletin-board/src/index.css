@@ -28,3 +28,14 @@ code {
   height: 30px !important;
   padding-right: 0px !important;
 }
+
+.formControl {
+  margin: auto !important;
+  width: 15% !important;
+}
+
+.loginForm {
+  padding: 60px;
+  width: 100%;
+  text-align: center;
+}
