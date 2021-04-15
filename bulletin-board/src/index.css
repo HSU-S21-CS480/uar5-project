@@ -39,3 +39,18 @@ code {
   width: 100%;
   text-align: center;
 }
+
+.registerForm {
+  margin-right: 40%;
+  margin-left: 40%;
+}
+
+
+.form-intro {
+  padding-top: 10%;
+  padding-bottom: 10px;
+  text-align: center;
+}
+#form-header {
+  font-size: 30px;
+}

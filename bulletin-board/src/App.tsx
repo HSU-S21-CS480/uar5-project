@@ -83,7 +83,12 @@ const App = () => {
           <Navbar.Collapse className="justify-content-end">
             <a href="#compose"><img src={compose} alt="compose" /></a>
             <Navbar.Text>
-              <Link to="/login">Login</Link>
+              <Link to="/login">
+                <Button variant="outline-primary"> Login </Button>
+              </Link>{' '}
+              <Link to="/register">
+                <Button variant="outline-primary"> Register </Button>
+              </Link>
             </Navbar.Text>
           </Navbar.Collapse>
         </Navbar>
@@ -91,6 +96,12 @@ const App = () => {
         <Switch>
           <Route path="/login">
             <Login />
+          </Route>
+          <Route path="/register">
+            <Register/>
+          </Route>
+          <Route path="/dashboard">
+            <Dashboard />
           </Route>
           <Route path="/">
             <Home
